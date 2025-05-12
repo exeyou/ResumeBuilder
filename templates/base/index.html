@@ -1,0 +1,42 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Group Portal{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f3f4f6;
+        color: #333;
+        text-align: center;
+    }
+    h1 {
+        font-size: 48px;
+        color: #1f2937;
+        margin-bottom: 20px;
+    }
+    p {
+        font-size: 24px;
+        color: #4b5563;
+        margin-bottom: 20px;
+    }
+    .extra-text {
+        font-size: 20px;
+        color: #6b7280;
+        max-width: 800px;
+        margin: 0 auto 30px;
+        line-height: 1.6;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Ласкаво просимо на Group Portal!</h1>
+<p>Раді вітати вас на нашому вебсайті.</p>
+
+<div class="extra-text">
+    <p>Тут ви можете об'єднуватися в групи, обговорювати проєкти та працювати разом над цікавими ідеями.</p>
+    <p>Створюйте нові спільноти, спілкуйтеся з однодумцями та знаходьте нові можливості для розвитку.</p>
+    <p>Не маєте акаунта? <a href="{% url 'accounts:register' %}" style="color: #2563eb;">Зареєструйтеся зараз</a> та приєднуйтеся до нашої спільноти!</p>
+</div>
+{% endblock %}
