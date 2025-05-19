@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts',
+    'resume',
+    'announcement'
 ]
 
 MIDDLEWARE = [
@@ -79,6 +82,10 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+LOGIN_REDIRECT_URL = 'home'  # Страница, на которую перенаправляется пользователь после входа
+LOGOUT_REDIRECT_URL = 'home'  # Страница, на которую перенаправляется пользователь после выхода
 
 
 # Password validation

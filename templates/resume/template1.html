@@ -1,0 +1,10 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+  <h2>Резюме (Шаблон 1)</h2>
+  <p><strong>Имя:</strong> {{ resume.first_name }}</p>
+  <p><strong>Фамилия:</strong> {{ resume.last_name }}</p>
+  <p><strong>Возраст:</strong> {{ resume.age }}</p>
+  <p><strong>Деятельность:</strong> {{ resume.activity }}</p>
+  <p><strong>Стаж:</strong> {{ resume.experience }} лет</p>
+{% endblock %}

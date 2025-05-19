@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% block title %}
+    Оголошення
+{% endblock %}
+
+{% block content %}
+<h1>Оголошення</h1>
+
+<ul>
+  {% for a in announcements %}
+    <li>
+      <strong>{{ a.name }}</strong><br>
+      <p>{{ a.body }}</p>
+    </li>
+  {% empty %}
+    <li>Немає оголошень.</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

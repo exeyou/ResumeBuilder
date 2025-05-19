@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+  <h2>Резюме: Альтернативный шаблон</h2>
+  <ul>
+    <li>Имя: {{ resume.first_name }}</li>
+    <li>Фамилия: {{ resume.last_name }}</li>
+    <li>Возраст: {{ resume.age }}</li>
+    <li>Профессия: {{ resume.activity }}</li>
+    <li>Опыт: {{ resume.experience }} лет</li>
+  </ul>
+{% endblock %}
