@@ -2,6 +2,7 @@
 
 {% block content %}
   <h2>Резюме: Альтернативный шаблон</h2>
+  {% include 'resume/components/save_button.html' %}
   <ul>
     <li>Имя: {{ resume.first_name }}</li>
     <li>Фамилия: {{ resume.last_name }}</li>

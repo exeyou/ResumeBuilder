@@ -1,0 +1,23 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<h2>Мои резюме</h2>
+
+{% if resumes %}
+    <ul>
+        {% for resume in resumes %}
+            <li>
+                <strong>{{ resume.first_name }} {{ resume.last_name }}</strong>
+                ({{ resume.activity }}) — {{ resume.created_at|date:"d.m.Y H:i" }}
+                <br>
+                <a href="{% url 'resume:edit_resume' resume.id %}">Редактировать</a>
+                |
+                <a href="{% url 'resume:delete_resume' resume.id %}">Удалить</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>У вас пока нет сохранённых резюме.</p>
+{% endif %}
+
+{% endblock %}

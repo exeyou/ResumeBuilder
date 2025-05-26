@@ -1,0 +1,11 @@
+{% if resume and not resume.is_saved %}
+<form method="POST" action="{% url 'resume:save_resume' %}" style="margin-top: 20px;">
+    {% csrf_token %}
+    <input type="hidden" name="resume_id" value="{{ resume.id }}">
+    <input type="hidden" name="template" value="{{ resume.template }}">
+
+    <button type="submit" class="btn btn-primary">
+        💾 Сохранить и редактировать
+    </button>
+</form>
+{% endif %}

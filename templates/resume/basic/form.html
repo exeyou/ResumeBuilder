@@ -1,0 +1,10 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+  <h2>{% if edit_mode %}Редагувати резюме{% else %}Створити резюме{% endif %}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if edit_mode %}Зберегти{% else %}Створити{% endif %}</button>
+  </form>
+{% endblock %}

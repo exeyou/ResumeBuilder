@@ -1,0 +1,58 @@
+<form method="post" id="resumeForm" action="{% url 'resume:save_resume' %}">
+  {% csrf_token %}
+  <input type="hidden" name="template" value="{{ resume.template }}">
+  {% if resume.id %}
+    <input type="hidden" name="resume_id" value="{{ resume.id }}">
+  {% endif %}
+
+  <label>Ім'я:</label>
+  <input type="text" name="first_name" id="input_first_name" value="{{ resume.first_name }}"><br>
+
+  <label>Прізвище:</label>
+  <input type="text" name="last_name" id="input_last_name" value="{{ resume.last_name }}"><br>
+
+  <label>Вік:</label>
+  <input type="number" name="age" id="input_age" value="{{ resume.age }}"><br>
+
+  <label>Телефон:</label>
+  <input type="text" name="phone" id="input_phone" value="{{ resume.phone }}"><br>
+
+  <label>Email:</label>
+  <input type="email" name="email" id="input_email" value="{{ resume.email }}"><br>
+
+  <label>Адреса:</label>
+  <input type="text" name="address" id="input_address" value="{{ resume.address }}"><br>
+
+  <label>Освіта:</label>
+  <textarea name="education" id="input_education">{{ resume.education }}</textarea><br>
+
+  <label>Про себе:</label>
+  <textarea name="about" id="input_about">{{ resume.about }}</textarea><br>
+
+  <label>Діяльність:</label>
+  <textarea name="activity" id="input_activity">{{ resume.activity }}</textarea><br>
+
+  <label>Досвід:</label>
+  <input type="number" name="experience" id="input_experience" value="{{ resume.experience }}"><br>
+
+  <button type="submit" id="saveButton">💾 Зберегти</button>
+</form>
+
+<script>
+  // Обновление превью в реальном времени
+  const fields = [
+    'first_name', 'last_name', 'age', 'phone', 'email', 'address',
+    'education', 'about', 'activity', 'experience'
+  ];
+
+  fields.forEach(field => {
+    const input = document.getElementById('input_' + field);
+    const preview = document.getElementById('preview_' + field);
+
+    if (input && preview) {
+      input.addEventListener('input', () => {
+        preview.textContent = input.value;
+      });
+    }
+  });
+</script>

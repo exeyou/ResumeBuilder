@@ -11,7 +11,7 @@ class ResumeForm(forms.ModelForm):
 
     class Meta:
         model = Resume
-        fields = ['first_name', 'last_name', 'age', 'activity', 'experience']
+        exclude = ['user', 'template', 'is_saved', 'created_at']
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)

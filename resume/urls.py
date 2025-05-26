@@ -5,5 +5,9 @@ app_name = 'resume'
 
 urlpatterns = [
     path('create/', views.create_resume, name='create_resume'),
-    path('preview/<int:resume_id>/<str:template_name>/', views.preview_resume, name='preview_resume'),
+    path('preview/<int:resume_id>/', views.preview_resume, name='preview_resume'),
+    path('save/', views.save_resume, name='save_resume'),
+    path('my/', views.my_resumes, name='my_resumes'),
+    path('edit/<int:resume_id>/', views.edit_resume, name='edit_resume'),
+    path('delete/<int:resume_id>/', views.delete_resume, name='delete_resume'),
 ]

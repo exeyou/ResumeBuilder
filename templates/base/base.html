@@ -9,6 +9,7 @@
         <a href="/">Головна</a> |
         <a href="{% url 'resume:create_resume' %}">Створити резюме</a> |
         <a href="{% url 'announcement:announcement_list' %}">Оголошення</a> |
+        <a href="{% url 'resume:my_resumes' %}">Мои резюме</a> |
         {% if user.is_authenticated %}
             <a href="{% url 'accounts:view_profile' %}">Профiль</a> |
             <a href="{% url 'accounts:logout' %}">Вихiд</a> |
