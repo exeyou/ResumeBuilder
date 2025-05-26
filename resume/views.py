@@ -56,10 +56,17 @@ def save_resume(request):
 
         if resume_id:
             resume = get_object_or_404(Resume, id=resume_id, user=request.user)
+
+            # Если не переданы ключевые данные, просто отмечаем как is_saved
+            if not request.POST.get('first_name') and not request.POST.get('last_name'):
+                resume.is_saved = True
+                resume.save()
+                return redirect('resume:edit_resume', resume_id=resume.id)
+
         else:
             resume = Resume(user=request.user)
 
-        # Обновление всех полей
+        # Обновление всех полей, если данные пришли
         resume.first_name = request.POST.get('first_name')
         resume.last_name = request.POST.get('last_name')
         resume.age = request.POST.get('age') or None
@@ -71,8 +78,8 @@ def save_resume(request):
         resume.education = request.POST.get('education')
         resume.about = request.POST.get('about')
         resume.template = template
+        resume.is_saved = True
 
-        resume.is_saved = True  # <-- теперь это "сохранённое" резюме
         resume.save()
 
         return redirect('resume:edit_resume', resume_id=resume.id)

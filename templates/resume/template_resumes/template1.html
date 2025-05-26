@@ -16,11 +16,6 @@
       <p><strong>Про себе:</strong> {{ resume.about }}</p>
       <p><strong>Діяльність:</strong> {{ resume.activity }}</p>
       <p><strong>Досвід:</strong> {{ resume.experience }}</p>
-      {% if not resume.is_saved %}
-        <button type="submit" class="btn btn-primary">
-            💾 Сохранить и редактировать
-        </button>
-    {% endif %}
     </div>
 
     <!-- Правая часть: боковое окно редактирования -->
@@ -29,5 +24,6 @@
         {% include 'resume/components/edit_resume.html' %}
       </div>
     {% endif %}
+    {% include 'resume/components/save_and_edit_button.html' %}
   </div>
 {% endblock %}
