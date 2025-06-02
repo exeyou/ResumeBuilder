@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-
+from django.utils import timezone
+from datetime import timedelta
 from .forms import ResumeForm
 from .models import Resume
+
+MAX_DRAFTS = 5
 
 @login_required
 def create_resume(request):
@@ -105,3 +108,15 @@ def delete_resume(request, resume_id):
 def preview_resume(request, resume_id):
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
     return render(request, f'resume/template_resumes/{resume.template}.html', {'resume': resume})
+
+@login_required
+def resume_drafts(request):
+    drafts = Resume.objects.filter(user=request.user, is_saved=False).order_by('-created_at')
+
+    # Ограничиваем количество черновиков
+    if drafts.count() > MAX_DRAFTS:
+        extra = drafts[MAX_DRAFTS:]
+        for draft in extra:
+            draft.delete()
+
+    return render(request, 'resume/basic/drafts.html', {'drafts': drafts})

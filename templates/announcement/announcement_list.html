@@ -4,17 +4,22 @@
 {% endblock %}
 
 {% block content %}
-<h1>Оголошення</h1>
+  <h1 style="font-size: 2.8rem; margin-bottom: 1.5rem; color: #004080;">Оголошення</h1>
 
-<ul>
-  {% for a in announcements %}
-    <li>
-      <strong>{{ a.name }}</strong><br>
-      <p>{{ a.body }}</p>
-    </li>
-  {% empty %}
-    <li>Немає оголошень.</li>
-  {% endfor %}
-</ul>
-
+  {% if announcements %}
+    <ul style="list-style: none; padding: 0; max-width: 900px;">
+      {% for a in announcements %}
+        <li style="background: #f0f6ff; border: 1px solid #cce0ff; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+          <h2 style="font-size: 1.8rem; margin-bottom: 0.3rem; color: #003366;">{{ a.name }}</h2>
+          <p style="font-size: 1.2rem; line-height: 1.6; color: #222;">
+            {{ a.body }}
+          </p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p style="font-size: 1.3rem; color: #555; max-width: 600px;">
+      Немає оголошень.
+    </p>
+  {% endif %}
 {% endblock %}

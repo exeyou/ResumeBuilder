@@ -1,13 +1,53 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-  <h2>Резюме: Альтернативный шаблон</h2>
-  {% include 'resume/components/save_button.html' %}
-  <ul>
-    <li>Имя: {{ resume.first_name }}</li>
-    <li>Фамилия: {{ resume.last_name }}</li>
-    <li>Возраст: {{ resume.age }}</li>
-    <li>Профессия: {{ resume.activity }}</li>
-    <li>Опыт: {{ resume.experience }} лет</li>
-  </ul>
+  <div style="display: flex; gap: 30px;">
+
+    <!-- Левая карточка -->
+    <div style="flex: 1; background: #3a3f51; color: #f0f0f0; padding: 25px; border-radius: 12px;">
+      {% if resume.first_name or resume.last_name %}
+        <h2 style="margin-bottom: 15px; font-size: 1.8rem; color: #ffffff; font-weight: bold;">
+          {{ resume.first_name }} {{ resume.last_name }}
+        </h2>
+      {% endif %}
+      {% if resume.age %}
+        <p style="margin-bottom: 8px; opacity: 0.9;">🎂 {{ resume.age }} років</p>
+      {% endif %}
+      {% if resume.phone %}
+        <p style="margin-bottom: 8px; opacity: 0.9;">📞 {{ resume.phone }}</p>
+      {% endif %}
+      {% if resume.email %}
+        <p style="margin-bottom: 8px; opacity: 0.9;">✉️ {{ resume.email }}</p>
+      {% endif %}
+      {% if resume.address %}
+        <p style="margin-bottom: 8px; opacity: 0.9;">📍 {{ resume.address }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Правая секция -->
+    <div style="flex: 2; font-size: 1.1rem;">
+      {% if resume.activity %}
+        <h3 style="color: #003366;">💼 {{ resume.activity }}</h3>
+      {% endif %}
+      {% if resume.experience %}
+        <p><strong>Досвід:</strong><br>{{ resume.experience }}</p>
+      {% endif %}
+      {% if resume.education %}
+        <p><strong>Освіта:</strong><br>{{ resume.education }}</p>
+      {% endif %}
+      {% if resume.about %}
+        <p><strong>Про себе:</strong><br>{{ resume.about }}</p>
+      {% endif %}
+
+      {% if not show_edit_panel %}
+        {% include 'resume/components/save_and_edit_button.html' %}
+      {% endif %}
+    </div>
+  </div>
+
+  {% if show_edit_panel %}
+    <div style="margin-top: 30px;">
+      {% include 'resume/components/edit_resume.html' %}
+    </div>
+  {% endif %}
 {% endblock %}

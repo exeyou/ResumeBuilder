@@ -1,29 +1,31 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-  <h2>Резюме (Шаблон 1)</h2>
+  <h2 style="font-size: 2.2rem; color: #004080; margin-bottom: 1.5rem;">Резюме</h2>
 
-  <div style="display: flex; gap: 20px;">
-    <!-- Левая часть: сам резюме (текст, без инпутов) -->
-    <div style="flex: 2;">
-      <p><strong>Ім'я:</strong> {{ resume.first_name }}</p>
-      <p><strong>Прізвище:</strong> {{ resume.last_name }}</p>
-      <p><strong>Вік:</strong> {{ resume.age }}</p>
-      <p><strong>Телефон:</strong> {{ resume.phone }}</p>
-      <p><strong>Email:</strong> {{ resume.email }}</p>
-      <p><strong>Адреса:</strong> {{ resume.address }}</p>
-      <p><strong>Освіта:</strong> {{ resume.education }}</p>
-      <p><strong>Про себе:</strong> {{ resume.about }}</p>
-      <p><strong>Діяльність:</strong> {{ resume.activity }}</p>
-      <p><strong>Досвід:</strong> {{ resume.experience }}</p>
+  <div style="display: flex; gap: 40px;">
+    <div style="flex: 2; font-size: 1.1rem;">
+      {% if resume.first_name or resume.last_name %}
+        <p><strong>ПІБ:</strong> {{ resume.first_name }} {{ resume.last_name }}</p>
+      {% endif %}
+      {% if resume.age %}<p><strong>Вік:</strong> {{ resume.age }}</p>{% endif %}
+      {% if resume.phone %}<p><strong>Телефон:</strong> {{ resume.phone }}</p>{% endif %}
+      {% if resume.email %}<p><strong>Email:</strong> {{ resume.email }}</p>{% endif %}
+      {% if resume.address %}<p><strong>Адреса:</strong> {{ resume.address }}</p>{% endif %}
+      {% if resume.education %}<p><strong>Освіта:</strong> {{ resume.education }}</p>{% endif %}
+      {% if resume.activity %}<p><strong>Діяльність:</strong> {{ resume.activity }}</p>{% endif %}
+      {% if resume.experience %}<p><strong>Досвід:</strong> {{ resume.experience }}</p>{% endif %}
+      {% if resume.about %}<p><strong>Про себе:</strong> {{ resume.about }}</p>{% endif %}
+
+      {% if not show_edit_panel %}
+        {% include 'resume/components/save_and_edit_button.html' %}
+      {% endif %}
     </div>
 
-    <!-- Правая часть: боковое окно редактирования -->
     {% if show_edit_panel %}
-      <div style="flex: 1; border-left: 1px solid #ccc; padding-left: 15px;">
+      <div style="flex: 1; border-left: 1px solid #ccc; padding-left: 20px;">
         {% include 'resume/components/edit_resume.html' %}
       </div>
     {% endif %}
-    {% include 'resume/components/save_and_edit_button.html' %}
   </div>
 {% endblock %}

@@ -1,12 +1,18 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-  <h2>Профиль пользователя</h2>
-  <p><strong>Имя:</strong> {{ profile.first_name }}</p>
-  <p><strong>Фамилия:</strong> {{ profile.last_name }}</p>
-  <p><strong>Возраст:</strong> {{ profile.age }}</p>
-  <p><strong>Деятельность:</strong> {{ profile.activity }}</p>
-  <p><strong>Стаж:</strong> {{ profile.experience }} лет</p>
+  <h2>Профіль користувача</h2>
 
-  <a href="{% url 'accounts:edit_profile' %}">Редактировать профиль</a>
+  <p><strong>Ім’я:</strong> {{ profile.first_name }}</p>
+  <p><strong>Прізвище:</strong> {{ profile.last_name }}</p>
+  <p><strong>Вік:</strong> {{ profile.age }}</p>
+  <p><strong>Діяльність:</strong> {{ profile.activity }}</p>
+  <p><strong>Досвід роботи:</strong> {{ profile.experience }} років</p>
+  <p><strong>Телефон:</strong> {{ profile.phone }}</p>
+  <p><strong>Email:</strong> {{ profile.email }}</p>
+  <p><strong>Адреса:</strong> {{ profile.address }}</p>
+  <p><strong>Освіта:</strong> {{ profile.education }}</p>
+  <p><strong>Про себе:</strong> {{ profile.about }}</p>
+
+  <a href="{% url 'accounts:edit_profile' %}" class="btn-link">Редагувати профіль</a>
 {% endblock %}

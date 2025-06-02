@@ -1,10 +1,47 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-  <h2>{% if edit_mode %}Редагувати резюме{% else %}Створити резюме{% endif %}</h2>
-  <form method="post">
+  <h2 style="font-size: 2.2rem; margin-bottom: 1.5rem; color: #004080;">
+    {% if edit_mode %}Редагувати резюме{% else %}Створити резюме{% endif %}
+  </h2>
+
+  <form method="post" style="max-width: 600px; font-size: 1.05rem;">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">{% if edit_mode %}Зберегти{% else %}Створити{% endif %}</button>
+
+    {% for field in form %}
+      {% if field.name != 'template' %}
+        <div style="margin-bottom: 12px;">
+          {{ field.label_tag }}<br>
+          {{ field }}
+          {% if field.errors %}
+            <div style="color: red;">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <!-- Радиокнопки шаблонов -->
+    <!-- Радиокнопки шаблонов -->
+    <div style="margin-top: 20px;">
+      <label style="font-weight: bold;">Оберіть шаблон:</label>
+      <div style="
+        display: flex;
+        gap: 15px 100px;
+        margin-top: 10px;
+      ">
+        {% for radio in form.template %}
+          <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+            {{ radio.tag }}
+            {{ radio.choice_label }}
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary"
+            style="font-size: 1.15rem; padding: 10px 20px; margin-top: 25px; border-radius: 6px; border: none;">
+      {% if edit_mode %}Зберегти{% else %}Створити{% endif %}
+    </button>
   </form>
 {% endblock %}

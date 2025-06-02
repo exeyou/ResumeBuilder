@@ -10,4 +10,5 @@ urlpatterns = [
     path('my/', views.my_resumes, name='my_resumes'),
     path('edit/<int:resume_id>/', views.edit_resume, name='edit_resume'),
     path('delete/<int:resume_id>/', views.delete_resume, name='delete_resume'),
+    path('drafts/', views.resume_drafts, name='drafts'),
 ]

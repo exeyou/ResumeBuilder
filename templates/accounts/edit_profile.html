@@ -1,10 +1,10 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-  <h2>Редактировать профиль</h2>
-  <form method="post">
+  <h2>Редагувати профіль</h2>
+  <form method="post" style="max-width: 600px;">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Сохранить</button>
+    <button type="submit" class="btn-primary">Зберегти</button>
   </form>
 {% endblock %}

@@ -1,18 +1,18 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-  <h2 style="font-size: 2.2rem; margin-bottom: 1.5rem; color: #004080;">Мої резюме</h2>
+  <h2 style="font-size: 2.2rem; margin-bottom: 1.5rem; color: #004080;">Чернетки резюме</h2>
 
-  {% if resumes %}
+  {% if drafts %}
     <ul style="list-style: none; padding: 0; max-width: 850px;">
-      {% for resume in resumes %}
+      {% for resume in drafts %}
         <li style="background: #f5faff; border: 1px solid #c7d9ff; border-radius: 8px; padding: 15px 20px; margin-bottom: 15px; font-size: 1.15rem; line-height: 1.5;">
           <strong>{{ resume.first_name }} {{ resume.last_name }}</strong>
-          <span style="color: #5577cc;"> ({{ resume.activity }})</span> —
+          <span style="color: #5577cc;"> ({{ resume.activity|default:"без назви" }})</span> —
           <span style="color: #555;">{{ resume.created_at|date:"d.m.Y H:i" }}</span>
           <br>
           <a href="{% url 'resume:edit_resume' resume.id %}" class="btn btn-secondary" style="font-size: 1rem; padding: 5px 10px; margin-right: 10px; border-radius: 5px; border: 1px solid #5577cc; color: #004080; text-decoration: none;">
-            Редагувати
+            Продовжити редагування
           </a>
           <a href="{% url 'resume:delete_resume' resume.id %}" class="btn btn-danger" style="font-size: 1rem; padding: 5px 10px; border-radius: 5px; border: 1px solid #cc4444; color: #b03030; text-decoration: none;">
             Видалити
@@ -21,10 +21,10 @@
       {% endfor %}
     </ul>
   {% else %}
-    <p style="font-size: 1.3rem; color: #555;">У вас поки немає збережених резюме.</p>
+    <p style="font-size: 1.3rem; color: #555;">У вас немає чернеток.</p>
   {% endif %}
 
-  <a href="{% url 'resume:drafts' %}" class="btn btn-link" style="margin-top: 25px; display: inline-block; font-size: 1rem; padding: 8px 15px; border-radius: 6px;">
-    📝 Чернетки (несохранені)
+  <a href="{% url 'resume:my_resumes' %}" class="btn btn-link" style="margin-top: 25px; display: inline-block;">
+    ← Назад до резюме
   </a>
 {% endblock %}
