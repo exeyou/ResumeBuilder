@@ -4,6 +4,22 @@ from django.utils import timezone
 from datetime import timedelta
 from .forms import ResumeForm
 from .models import Resume
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+import tempfile
+from docx import Document
+import subprocess
+from django.utils.text import slugify
+import pdfkit
+import time
+import os
+from django.conf import settings
+from django.shortcuts import get_object_or_404
+from weasyprint import HTML, CSS
+from django.http import HttpResponse
+from django.utils.text import slugify
+from django.http import FileResponse, Http404
+from django.utils.encoding import smart_str
 
 MAX_DRAFTS = 5
 
@@ -120,3 +136,74 @@ def resume_drafts(request):
             draft.delete()
 
     return render(request, 'resume/basic/drafts.html', {'drafts': drafts})
+
+
+@login_required
+def download_resume_pdf(request, resume_id):
+    resume = get_object_or_404(Resume, id=resume_id, user=request.user)
+
+    html_string = render_to_string(
+        f'resume/template_resumes/{resume.template}.html',
+        {
+            'resume': resume,
+            'show_edit_panel': False,
+            'pdf': True
+        },
+        request=request
+    )
+
+    html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+
+    pdf = html.write_pdf(stylesheets=[CSS(string='@page { size: A4; margin: 10mm }')])
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    filename = f"resume_{slugify(resume.first_name or '')}_{slugify(resume.last_name or '')}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    return response
+
+@login_required
+def download_resume_docx(request, resume_id):
+    resume = get_object_or_404(Resume, id=resume_id, user=request.user)
+
+    # Рендерим HTML из шаблона
+    html_string = render_to_string(
+        f'resume/template_resumes/{resume.template}.html',
+        {
+            'resume': resume,
+            'show_edit_panel': False,
+            'pdf': True
+        },
+        request=request
+    )
+
+    # Создаем временные файлы
+    with tempfile.NamedTemporaryFile(suffix=".html", delete=False) as html_file, \
+         tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as docx_file:
+
+        html_file.write(html_string.encode('utf-8'))
+        html_file.flush()
+
+        # Вызываем Pandoc
+        try:
+            subprocess.run([
+                "pandoc",
+                html_file.name,
+                "-f", "html",
+                "-t", "docx",
+                "-o", docx_file.name,
+                "--embed-resources",  # чтобы включить встроенные стили
+                "--standalone"
+            ], check=True)
+
+            docx_file.seek(0)
+            filename = f"resume_{slugify(resume.first_name or '')}_{slugify(resume.last_name or '')}.docx"
+
+            # Возвращаем ответ
+            with open(docx_file.name, "rb") as f:
+                response = HttpResponse(f.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+                response['Content-Disposition'] = f'attachment; filename="{filename}"'
+                return response
+
+        except subprocess.CalledProcessError:
+            return HttpResponse("Помилка при генерації DOCX через Pandoc.", status=500)

@@ -1,4 +1,6 @@
 {% extends 'base/base.html' %}
+{% load static %}
+
 
 {% block content %}
   <h2 style="font-size: 2.2rem; margin-bottom: 1.5rem; color: #004080;">
@@ -20,15 +22,9 @@
       {% endif %}
     {% endfor %}
 
-    <!-- Радиокнопки шаблонов -->
-    <!-- Радиокнопки шаблонов -->
     <div style="margin-top: 20px;">
       <label style="font-weight: bold;">Оберіть шаблон:</label>
-      <div style="
-        display: flex;
-        gap: 15px 100px;
-        margin-top: 10px;
-      ">
+      <div style="display: flex; gap: 15px 100px; margin-top: 10px;">
         {% for radio in form.template %}
           <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
             {{ radio.tag }}
@@ -38,10 +34,34 @@
       </div>
     </div>
 
+    <div id="template-preview" style="margin-top: 25px; border: 1px solid #ccc; border-radius: 8px; padding: 15px; max-width: 400px;">
+      <p style="font-weight: bold; margin-bottom: 10px;">Попередній перегляд шаблону:</p>
+      <img id="preview-img"
+           src="{% static 'resume_templates/' %}{{ form.template.value }}.jpg"
+           alt="Preview"
+           style="width: 100%; border-radius: 6px; object-fit: contain;" />
+    </div>
 
     <button type="submit" class="btn btn-primary"
             style="font-size: 1.15rem; padding: 10px 20px; margin-top: 25px; border-radius: 6px; border: none;">
       {% if edit_mode %}Зберегти{% else %}Створити{% endif %}
     </button>
   </form>
+
+  <script>
+    // Базовый путь к static папке с шаблонами (сформируем в Django, чтобы JS знал правильный путь)
+    const staticBasePath = "{% static 'resume_templates/' %}";
+
+    const radios = document.querySelectorAll('input[name="{{ form.template.name }}"]');
+    const previewImg = document.getElementById('preview-img');
+
+    radios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.checked) {
+          previewImg.src = staticBasePath + radio.value + ".jpg";
+          previewImg.alt = "Preview of " + radio.value;
+        }
+      });
+    });
+  </script>
 {% endblock %}

@@ -24,7 +24,13 @@
     {% if resume.experience %}
     <section style="background: #fff8e1; padding: 20px; border-radius: 8px;">
       <h3>📜 Досвід</h3>
-      <p>{{ resume.experience }}</p>
+      <p><strong>Досвід:</strong>
+        {% if resume.experience %}
+          {{ resume.experience }} {{ resume.experience|pluralize:"рік,роки,років" }} досвіду
+        {% else %}
+          Немає даних
+        {% endif %}
+      </p>
     </section>
     {% endif %}
 
@@ -41,17 +47,28 @@
       <p>{{ resume.about }}</p>
     </section>
     {% endif %}
-
+     {% if not pdf %}
+        <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
+          Завантажити PDF
+        </a>
+        <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
+          Завантажити DOCX
+        </a>
+      {% endif %}
     {% if not show_edit_panel %}
-      <div>
-        {% include 'resume/components/save_and_edit_button.html' %}
-      </div>
+      {% if not pdf %}
+        <div>
+          {% include 'resume/components/save_and_edit_button.html' %}
+        </div>
+      {% endif %}
     {% endif %}
 
     {% if show_edit_panel %}
-      <div>
-        {% include 'resume/components/edit_resume.html' %}
-      </div>
+      {% if not pdf %}
+        <div>
+          {% include 'resume/components/edit_resume.html' %}
+        </div>
+      {% endif %}
     {% endif %}
   </div>
 {% endblock %}

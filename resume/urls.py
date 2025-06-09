@@ -11,4 +11,6 @@ urlpatterns = [
     path('edit/<int:resume_id>/', views.edit_resume, name='edit_resume'),
     path('delete/<int:resume_id>/', views.delete_resume, name='delete_resume'),
     path('drafts/', views.resume_drafts, name='drafts'),
+    path('downloadpdf/<int:resume_id>/', views.download_resume_pdf, name='download_resume_pdf'),
+    path('downloaddocx/<int:resume_id>/', views.download_resume_docx, name='download_resume_docx'),
 ]

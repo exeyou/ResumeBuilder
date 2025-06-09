@@ -127,34 +127,38 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>QuickPrint</h1>
-        {% if user.is_authenticated %}
-            <span>Вітаємо, {{ user.username }}!</span>
-        {% endif %}
-    </header>
+     {% if not pdf %}
+        <header>
+            <h1>QuickPrint</h1>
+            {% if user.is_authenticated %}
+                <span>Вітаємо, {{ user.username }}!</span>
+            {% endif %}
+        </header>
 
-    <nav>
-        <a href="/">Головна</a>
-        <a href="{% url 'resume:create_resume' %}">Створити резюме</a>
-        <a href="{% url 'announcement:announcement_list' %}">Оголошення</a>
-        <a href="{% url 'resume:my_resumes' %}">Мої резюме</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'accounts:view_profile' %}">Профіль</a>
-            <a href="{% url 'accounts:logout' %}">Вихід</a>
-        {% else %}
-            <a href="{% url 'accounts:signup' %}">Реєстрація</a>
-            <a href="{% url 'accounts:login' %}">Вхід</a>
-        {% endif %}
-    </nav>
+        <nav>
+            <a href="/">Головна</a>
+            <a href="{% url 'resume:create_resume' %}">Створити резюме</a>
+            <a href="{% url 'announcement:announcement_list' %}">Оголошення</a>
+            <a href="{% url 'resume:my_resumes' %}">Мої резюме</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:view_profile' %}">Профіль</a>
+                <a href="{% url 'accounts:logout' %}">Вихід</a>
+            {% else %}
+                <a href="{% url 'accounts:signup' %}">Реєстрація</a>
+                <a href="{% url 'accounts:login' %}">Вхід</a>
+            {% endif %}
+        </nav>
+    {% endif %}
 
     <main>
         {% block content %}
         {% endblock %}
     </main>
 
-    <footer>
-        &copy; 2025 Резюме-білдер. Всі права захищено.
-    </footer>
+    {% if not pdf %}
+        <footer>
+            &copy; 2025 Резюме-білдер. Всі права захищено.
+        </footer>
+    {% endif %}
 </body>
 </html>

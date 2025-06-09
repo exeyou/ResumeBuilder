@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-
+{% load resume_tags %}
 {% block content %}
   <h2 style="font-size: 2.2rem; color: #004080; margin-bottom: 1.5rem;">Резюме</h2>
 
@@ -14,18 +14,35 @@
       {% if resume.address %}<p><strong>Адреса:</strong> {{ resume.address }}</p>{% endif %}
       {% if resume.education %}<p><strong>Освіта:</strong> {{ resume.education }}</p>{% endif %}
       {% if resume.activity %}<p><strong>Діяльність:</strong> {{ resume.activity }}</p>{% endif %}
-      {% if resume.experience %}<p><strong>Досвід:</strong> {{ resume.experience }}</p>{% endif %}
+      {% if resume.experience %}
+        <p><strong>Досвід:</strong> {{ resume.experience|plural_years }}</p>
+      {% endif %}
       {% if resume.about %}<p><strong>Про себе:</strong> {{ resume.about }}</p>{% endif %}
 
       {% if not show_edit_panel %}
-        {% include 'resume/components/save_and_edit_button.html' %}
+        {% if not pdf %}
+          {% include 'resume/components/save_and_edit_button.html' %}
+        {% endif %}
+      {% endif %}
+
+
+      {% if not pdf %}
+        <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
+          Завантажити PDF
+        </a>
+        <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
+          Завантажити DOCX
+        </a>
       {% endif %}
     </div>
 
     {% if show_edit_panel %}
+     {% if not pdf %}
       <div style="flex: 1; border-left: 1px solid #ccc; padding-left: 20px;">
         {% include 'resume/components/edit_resume.html' %}
       </div>
+     {% endif %}
     {% endif %}
+
   </div>
 {% endblock %}

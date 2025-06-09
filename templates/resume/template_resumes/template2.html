@@ -30,7 +30,13 @@
         <h3 style="color: #003366;">💼 {{ resume.activity }}</h3>
       {% endif %}
       {% if resume.experience %}
-        <p><strong>Досвід:</strong><br>{{ resume.experience }}</p>
+       <p><strong>Досвід:</strong>
+        {% if resume.experience %}
+          {{ resume.experience }} {{ resume.experience|pluralize:"рік,роки,років" }} досвіду
+        {% else %}
+          Немає даних
+        {% endif %}
+      </p>
       {% endif %}
       {% if resume.education %}
         <p><strong>Освіта:</strong><br>{{ resume.education }}</p>
@@ -40,14 +46,26 @@
       {% endif %}
 
       {% if not show_edit_panel %}
-        {% include 'resume/components/save_and_edit_button.html' %}
+        {% if not pdf %}
+          {% include 'resume/components/save_and_edit_button.html' %}
+        {% endif %}
       {% endif %}
     </div>
+     {% if not pdf %}
+        <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
+          Завантажити PDF
+        </a>
+        <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
+          Завантажити DOCX
+        </a>
+      {% endif %}
   </div>
 
   {% if show_edit_panel %}
-    <div style="margin-top: 30px;">
-      {% include 'resume/components/edit_resume.html' %}
-    </div>
+    {% if not pdf %}
+      <div style="margin-top: 30px;">
+        {% include 'resume/components/edit_resume.html' %}
+      </div>
+    {% endif %}
   {% endif %}
 {% endblock %}
