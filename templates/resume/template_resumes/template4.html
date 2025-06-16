@@ -1,0 +1,122 @@
+{% extends 'base/base.html' %}
+{% load resume_tags %}
+{% block content %}
+  <style>
+    body {
+      background: #f0f4f8;
+    }
+
+    .resume-container {
+      display: flex;
+      gap: 40px;
+      padding: 30px;
+    }
+
+    .resume-card {
+      flex: 2;
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      font-size: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .resume-item {
+      padding: 12px 20px;
+      border-radius: 10px;
+      background: linear-gradient(to right, #e0ecff, #f8faff);
+      transition: background 0.3s ease;
+    }
+
+    .resume-item:nth-child(even) {
+      align-self: flex-end;
+      background: linear-gradient(to left, #d9f2e6, #f6fdf9);
+    }
+
+    .resume-item:hover {
+      background: #dceeff;
+    }
+
+    .edit-panel {
+      flex: 1;
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      border-left: 4px solid #007acc;
+    }
+
+    .download-buttons {
+      margin-top: 25px;
+      display: flex;
+      gap: 12px;
+    }
+
+    h2.resume-title {
+      font-size: 2.2rem;
+      color: #004080;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+  </style>
+
+  <h2 class="resume-title">Резюме</h2>
+
+  <div class="resume-container">
+    <div class="resume-card">
+      {% if resume.first_name or resume.last_name %}
+        <div class="resume-item"><strong>ПІБ:</strong> {{ resume.first_name }} {{ resume.last_name }}</div>
+      {% endif %}
+      {% if resume.age %}
+        <div class="resume-item"><strong>Вік:</strong> {{ resume.age }}</div>
+      {% endif %}
+      {% if resume.phone %}
+        <div class="resume-item"><strong>Телефон:</strong> {{ resume.phone }}</div>
+      {% endif %}
+      {% if resume.email %}
+        <div class="resume-item"><strong>Email:</strong> {{ resume.email }}</div>
+      {% endif %}
+      {% if resume.address %}
+        <div class="resume-item"><strong>Адреса:</strong> {{ resume.address }}</div>
+      {% endif %}
+      {% if resume.education %}
+        <div class="resume-item"><strong>Освіта:</strong> {{ resume.education }}</div>
+      {% endif %}
+      {% if resume.activity %}
+        <div class="resume-item"><strong>Діяльність:</strong> {{ resume.activity }}</div>
+      {% endif %}
+      {% if resume.experience %}
+        <div class="resume-item"><strong>Досвід:</strong> {{ resume.experience|plural_years }}</div>
+      {% endif %}
+      {% if resume.about %}
+        <div class="resume-item"><strong>Про себе:</strong> {{ resume.about }}</div>
+      {% endif %}
+
+      {% if not show_edit_panel and not pdf %}
+        <div style="margin-top: 20px;">
+          {% include 'resume/components/save_and_edit_button.html' %}
+        </div>
+      {% endif %}
+
+      {% if not pdf %}
+        <div class="download-buttons">
+          <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
+            Завантажити PDF (рекомендується)
+          </a>
+          <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
+            Завантажити DOCX (можуть бути нестикування)
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if show_edit_panel and not pdf %}
+      <div class="edit-panel">
+        {% include 'resume/components/edit_resume.html' %}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

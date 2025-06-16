@@ -30,9 +30,11 @@
         <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
           Завантажити PDF
         </a>
+        (рекомендується)
         <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
           Завантажити DOCX
         </a>
+        (можуть бути нестикування)
       {% endif %}
     </div>
 

@@ -1,0 +1,169 @@
+{% extends 'base/base.html' %}
+{% load resume_tags %}
+{% block content %}
+  <style>
+    .timeline-container {
+      position: relative;
+      margin: 2rem auto;
+      padding-left: 40px;
+      font-size: 1.1rem;
+    }
+
+    .timeline-line {
+      position: absolute;
+      top: 0;
+      left: 20px;
+      width: 4px;
+      height: 100%;
+      background: #007acc;
+    }
+
+    .timeline-block {
+      position: relative;
+      margin-bottom: 30px;
+      padding-left: 30px;
+    }
+
+    .timeline-block::before {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 6px;
+      width: 14px;
+      height: 14px;
+      background: #007acc;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 0 0 2px #007acc;
+    }
+
+    .timeline-content {
+      background: #f2f8ff;
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .timeline-content strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #004080;
+    }
+
+    h2 {
+      text-align: center;
+      color: #004080;
+      margin-bottom: 2rem;
+    }
+
+    .skill-bar {
+      height: 12px;
+      background-color: #ccc;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+
+    .skill-level {
+      height: 100%;
+      background-color: #007acc;
+    }
+
+    .skill-container {
+      margin-top: 10px;
+    }
+
+    .skill-label {
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+
+  <h2>Резюме</h2>
+  <div class="timeline-container">
+    <div class="timeline-line"></div>
+
+    {% if resume.first_name or resume.last_name %}
+      <div class="timeline-block">
+        <div class="timeline-content">
+          <strong>ПІБ:</strong> {{ resume.first_name }} {{ resume.last_name }}
+        </div>
+      </div>
+    {% endif %}
+    {% if resume.age %}
+      <div class="timeline-block">
+        <div class="timeline-content">
+          <strong>Вік:</strong> {{ resume.age }}
+        </div>
+      </div>
+    {% endif %}
+    {% if resume.phone %}
+      <div class="timeline-block">
+        <div class="timeline-content">
+          <strong>Телефон:</strong> {{ resume.phone }}
+        </div>
+      </div>
+    {% endif %}
+    {% if resume.email %}
+      <div class="timeline-block">
+        <div class="timeline-content">
+          <strong>Email:</strong> {{ resume.email }}
+        </div>
+      </div>
+    {% endif %}
+    {% if resume.address %}
+      <div class="timeline-block">
+        <div class="timeline-content">
+          <strong>Адреса:</strong> {{ resume.address }}
+        </div>
+      </div>
+    {% endif %}
+    {% if resume.education %}
+      <div class="timeline-block">
+        <div class="timeline-content">
+          <strong>Освіта:</strong> {{ resume.education }}
+        </div>
+      </div>
+    {% endif %}
+    {% if resume.activity %}
+      <div class="timeline-block">
+        <div class="timeline-content">
+          <strong>Діяльність:</strong> {{ resume.activity }}
+        </div>
+      </div>
+    {% endif %}
+    {% if resume.experience %}
+      <div class="timeline-block">
+        <div class="timeline-content">
+          <strong>Досвід:</strong> {{ resume.experience|plural_years }}
+        </div>
+      </div>
+    {% endif %}
+    {% if resume.about %}
+      <div class="timeline-block">
+        <div class="timeline-content">
+          <strong>Про себе:</strong> {{ resume.about }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if resume.skills.all %}
+      <div class="timeline-block">
+        <div class="timeline-content">
+          <strong>Навички:</strong>
+          {% for skill in resume.skills.all %}
+            <div class="skill-container">
+              <div class="skill-label">
+                <span>{{ skill.name }}</span>
+                <span>{{ skill.level }}/10</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: {{ skill.level|floatformat:1|divisibleby:10|floatformat:1 }}0%;"></div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

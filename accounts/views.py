@@ -9,19 +9,7 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.email = form.cleaned_data['email']
-            user.save()
-
-            # Создаём профиль вручную, если сигнал уже не сделал этого
-            profile, _ = Profile.objects.get_or_create(user=user)
-            profile.first_name = form.cleaned_data['first_name']
-            profile.last_name = form.cleaned_data['last_name']
-            profile.age = form.cleaned_data['age']
-            profile.activity = form.cleaned_data['activity']
-            profile.experience = form.cleaned_data['experience']
-            profile.save()
-
+            user = form.save()
             login(request, user)
             return redirect('home')
     else:

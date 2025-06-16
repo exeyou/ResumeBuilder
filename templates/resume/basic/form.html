@@ -24,7 +24,7 @@
 
     <div style="margin-top: 20px;">
       <label style="font-weight: bold;">Оберіть шаблон:</label>
-      <div style="display: flex; gap: 15px 100px; margin-top: 10px;">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px 20px; margin-top: 10px;">
         {% for radio in form.template %}
           <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
             {{ radio.tag }}
@@ -40,7 +40,21 @@
            src="{% static 'resume_templates/' %}{{ form.template.value }}.jpg"
            alt="Preview"
            style="width: 100%; border-radius: 6px; object-fit: contain;" />
+        <div id="template-rating" style="margin-top: 15px; display: none;">
+          <p style="font-weight: bold;">Оцінка шаблону:</p>
+          <div id="rating-stars" style="font-size: 2rem; cursor: pointer; color: #ccc;">
+            <span data-star="1">★</span>
+            <span data-star="2">★</span>
+            <span data-star="3">★</span>
+            <span data-star="4">★</span>
+            <span data-star="5">★</span>
+          </div>
+          <div id="rating-info" style="margin-top: 5px; font-size: 0.95rem; color: #666;"></div>
+        </div>
+      </div>
     </div>
+
+
 
     <button type="submit" class="btn btn-primary"
             style="font-size: 1.15rem; padding: 10px 20px; margin-top: 25px; border-radius: 6px; border: none;">
@@ -49,19 +63,91 @@
   </form>
 
   <script>
-    // Базовый путь к static папке с шаблонами (сформируем в Django, чтобы JS знал правильный путь)
-    const staticBasePath = "{% static 'resume_templates/' %}";
+  const staticBasePath = "{% static 'resume_templates/' %}";
+  const radios = document.querySelectorAll('input[name="{{ form.template.name }}"]');
+  const previewImg = document.getElementById('preview-img');
 
-    const radios = document.querySelectorAll('input[name="{{ form.template.name }}"]');
-    const previewImg = document.getElementById('preview-img');
+  const ratingContainer = document.getElementById('template-rating');
+  const ratingStars = document.getElementById('rating-stars');
+  const ratingInfo = document.getElementById('rating-info');
+  const starElements = ratingStars.querySelectorAll('span');
 
-    radios.forEach(radio => {
-      radio.addEventListener('change', () => {
-        if (radio.checked) {
-          previewImg.src = staticBasePath + radio.value + ".jpg";
-          previewImg.alt = "Preview of " + radio.value;
-        }
-      });
+  function fillStars(rating) {
+  starElements.forEach(star => {
+    const value = parseInt(star.dataset.star);
+    if (value <= Math.round(rating)) {
+      star.style.color = '#FFD700'; // золотой
+    } else {
+      star.style.color = '#ccc'; // серый
+    }
+  });
+}
+
+async function loadRating(templateName) {
+  ratingContainer.style.display = 'block';
+
+  const ratingUrl = "{% url 'resume:get_template_rating' %}?template=" + templateName;
+  const res = await fetch(ratingUrl);
+  const data = await res.json();
+
+  const userRating = data.user_rating || 0;
+  const averageRating = data.average || 0;
+
+  const ratingToShow = userRating > 0 ? userRating : averageRating;
+
+  fillStars(ratingToShow);
+
+  ratingStars.setAttribute('data-current-template', templateName);
+  ratingStars.setAttribute('data-user-rating', userRating);
+
+  ratingInfo.innerText = `Середня оцінка: ${averageRating} / 5 (${data.count || 0} голосів)`;
+}
+
+  async function submitRating(rating, templateName) {
+    const res = await fetch("{% url 'resume:rate_template' %}", {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({ rating, template: templateName })
     });
-  </script>
+
+    if (res.ok) {
+      await loadRating(templateName); // Перезагружаем UI
+    }
+  }
+
+  // Обработка кликов по звёздам
+  starElements.forEach(star => {
+    star.addEventListener('click', () => {
+      const rating = parseInt(star.dataset.star);
+      const templateName = ratingStars.getAttribute('data-current-template');
+      if (templateName) {
+        submitRating(rating, templateName);
+      }
+    });
+
+    // Визуальный hover-эффект
+    star.addEventListener('mouseover', () => {
+      const hoverRating = parseInt(star.dataset.star);
+      fillStars(hoverRating);
+    });
+
+    star.addEventListener('mouseout', () => {
+      const userRating = parseInt(ratingStars.getAttribute('data-user-rating')) || 0;
+      fillStars(userRating);
+    });
+  });
+
+  radios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      if (radio.checked) {
+        previewImg.src = staticBasePath + radio.value + ".jpg";
+        previewImg.alt = "Preview of " + radio.value;
+        loadRating(radio.value);
+      }
+    });
+  });
+</script>
 {% endblock %}

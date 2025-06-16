@@ -6,6 +6,12 @@ class ResumeForm(forms.ModelForm):
         ('template1', 'Шаблон 1'),
         ('template2', 'Шаблон 2'),
         ('template3', 'Шаблон 3'),
+        ('template4', 'Шаблон 4'),
+        ('template5', 'Шаблон 5'),
+        ('template6', 'Шаблон 6'),
+        ('template7', 'Шаблон 7'),
+        ('template8', 'Шаблон 8'),
+        ('template9', 'Шаблон 9')
     )
     template = forms.ChoiceField(choices=TEMPLATE_CHOICES, widget=forms.RadioSelect)
 
@@ -29,3 +35,4 @@ class ResumeForm(forms.ModelForm):
             self.fields['about'].initial = profile.about
             self.fields['activity'].initial = profile.activity
             self.fields['experience'].initial = profile.experience
+

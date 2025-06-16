@@ -1,0 +1,68 @@
+{% extends 'base/base.html' %}
+{% load resume_tags %}
+{% block content %}
+  <style>
+    .book-page {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 60px;
+      background: #fffdf6;
+      font-family: 'Georgia', serif;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      border: 1px solid #e3e3dc;
+      border-radius: 8px;
+    }
+
+    .book-title {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 30px;
+      color: #5b4636;
+    }
+
+    .book-section {
+      margin-bottom: 30px;
+    }
+
+    .book-section h3 {
+      font-size: 1.4rem;
+      color: #7b5e47;
+      border-bottom: 1px dashed #ccc;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+    }
+
+    .book-section p {
+      margin: 5px 0;
+      line-height: 1.6;
+    }
+  </style>
+
+  <div class="book-page">
+    <div class="book-title">Резюме</div>
+
+    <div class="book-section">
+      <h3>Особисті дані</h3>
+      {% if resume.first_name or resume.last_name %}<p><strong>ПІБ:</strong> {{ resume.first_name }} {{ resume.last_name }}</p>{% endif %}
+      {% if resume.age %}<p><strong>Вік:</strong> {{ resume.age }}</p>{% endif %}
+      {% if resume.phone %}<p><strong>Телефон:</strong> {{ resume.phone }}</p>{% endif %}
+      {% if resume.email %}<p><strong>Email:</strong> {{ resume.email }}</p>{% endif %}
+      {% if resume.address %}<p><strong>Адреса:</strong> {{ resume.address }}</p>{% endif %}
+    </div>
+
+    <div class="book-section">
+      <h3>Освіта</h3>
+      {% if resume.education %}<p>{{ resume.education }}</p>{% endif %}
+    </div>
+
+    <div class="book-section">
+      <h3>Досвід</h3>
+      {% if resume.experience %}<p>{{ resume.experience|plural_years }}</p>{% endif %}
+    </div>
+
+    <div class="book-section">
+      <h3>Про себе</h3>
+      {% if resume.about %}<p>{{ resume.about }}</p>{% endif %}
+    </div>
+  </div>
+{% endblock %}

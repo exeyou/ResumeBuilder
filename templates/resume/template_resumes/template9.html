@@ -1,0 +1,85 @@
+{% extends 'base/base.html' %}
+{% load resume_tags %}
+{% block content %}
+  <style>
+    body {
+      background: #faf5f5;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .pastel-wrapper {
+      max-width: 850px;
+      margin: 40px auto;
+      padding: 40px;
+      background: #fffdfd;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(244, 200, 255, 0.15);
+    }
+
+    h2 {
+      text-align: center;
+      color: #ab69b4;
+      margin-bottom: 30px;
+    }
+
+    .pastel-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .pastel-card {
+      flex: 1 1 45%;
+      background: #fceefc;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+    }
+
+    .pastel-card h3 {
+      color: #8c49a1;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .pastel-card p {
+      color: #4c3c4c;
+      line-height: 1.5;
+    }
+  </style>
+
+  <div class="pastel-wrapper">
+    <h2>Резюме</h2>
+
+    <div class="pastel-row">
+      <div class="pastel-card">
+        <h3>ПІБ</h3>
+        <p>{{ resume.first_name }} {{ resume.last_name }}</p>
+      </div>
+      <div class="pastel-card">
+        <h3>Вік</h3>
+        <p>{{ resume.age }}</p>
+      </div>
+      <div class="pastel-card">
+        <h3>Телефон</h3>
+        <p>{{ resume.phone }}</p>
+      </div>
+      <div class="pastel-card">
+        <h3>Email</h3>
+        <p>{{ resume.email }}</p>
+      </div>
+      <div class="pastel-card">
+        <h3>Освіта</h3>
+        <p>{{ resume.education }}</p>
+      </div>
+      <div class="pastel-card">
+        <h3>Досвід</h3>
+        <p>{{ resume.experience|plural_years }}</p>
+      </div>
+      <div class="pastel-card" style="flex-basis: 100%;">
+        <h3>Про себе</h3>
+        <p>{{ resume.about }}</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

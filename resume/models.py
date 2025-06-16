@@ -21,3 +21,15 @@ class Resume(models.Model):
 
     def __str__(self):
         return f"{self.user.username} — {self.first_name or ''} {self.last_name or ''}"
+
+class TemplateRating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    template_name = models.CharField(max_length=100)
+    rating = models.PositiveSmallIntegerField()  # 1–5
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'template_name')  # Один пользователь – одна оценка на шаблон
+
+    def __str__(self):
+        return f'{self.user.username} rated {self.template_name} → {self.rating}'

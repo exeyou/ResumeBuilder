@@ -1,0 +1,105 @@
+{% extends 'base/base.html' %}
+{% load resume_tags %}
+{% block content %}
+  <style>
+    .resume-graph {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      font-size: 1.1rem;
+      color: #222;
+    }
+
+    .bar-label {
+      margin-bottom: 8px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-container {
+      background: #e6edf5;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      height: 20px;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, #4cb8ff, #007acc);
+      transition: width 0.5s ease;
+    }
+
+    .progress-value {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-shadow: 0 0 3px rgba(0,0,0,0.5);
+      user-select: none;
+    }
+
+    h2 {
+      text-align: center;
+      color: #004080;
+      margin-bottom: 2rem;
+    }
+
+    .info-block p {
+      margin: 4px 0;
+    }
+  </style>
+
+  <h2>Резюме</h2>
+
+  <div class="resume-graph">
+
+    <div class="info-block">
+      {% if resume.first_name or resume.last_name %}
+        <p><strong>ПІБ:</strong> {{ resume.first_name }} {{ resume.last_name }}</p>
+      {% endif %}
+      {% if resume.age %}
+        <p><strong>Вік:</strong> {{ resume.age }}</p>
+      {% endif %}
+      {% if resume.phone %}
+        <p><strong>Телефон:</strong> {{ resume.phone }}</p>
+      {% endif %}
+      {% if resume.email %}
+        <p><strong>Email:</strong> {{ resume.email }}</p>
+      {% endif %}
+      {% if resume.address %}
+        <p><strong>Адреса:</strong> {{ resume.address }}</p>
+      {% endif %}
+      {% if resume.about %}
+        <p><strong>Про себе:</strong> {{ resume.about }}</p>
+      {% endif %}
+      {% if resume.activity %}
+        <p><strong>Діяльність:</strong> {{ resume.activity }}</p>
+      {% endif %}
+      {% if resume.education %}
+        <p><strong>Освіта:</strong> {{ resume.education }}</p>
+      {% endif %}
+    </div>
+
+    {% if resume.experience %}
+      <div class="bar-label">
+        <span>Досвід</span>
+        <span>{{ resume.experience|default:"70" }}%</span>
+      </div>
+      <div class="progress-container">
+        <div class="progress-bar" style="width: {{ resume.experience|default:"70" }}%;"></div>
+        <div class="progress-value">{{ resume.experience|default:"70" }}%</div>
+      </div>
+    {% endif %}
+
+  </div>
+{% endblock %}

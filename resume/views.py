@@ -1,27 +1,35 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from datetime import timedelta
-from .forms import ResumeForm
-from .models import Resume
-from django.template.loader import render_to_string
-from django.http import HttpResponse
-import tempfile
-from docx import Document
-import subprocess
 from django.utils.text import slugify
-import pdfkit
+from django.utils.encoding import smart_str
+from django.views.decorators.http import require_POST
+from django.http import HttpResponse, FileResponse, JsonResponse, Http404
+from django.template.loader import render_to_string
+from django.conf import settings
+
+from datetime import timedelta
+import tempfile
+import subprocess
 import time
 import os
-from django.conf import settings
-from django.shortcuts import get_object_or_404
+
+from docx import Document
 from weasyprint import HTML, CSS
-from django.http import HttpResponse
-from django.utils.text import slugify
-from django.http import FileResponse, Http404
-from django.utils.encoding import smart_str
+import pdfkit
+
+from .forms import ResumeForm
+from .models import Resume, TemplateRating
 
 MAX_DRAFTS = 5
+
+def get_template_rating_info(template_name):
+    ratings = TemplateRating.objects.filter(template_name=template_name)
+    total = ratings.count()
+    if total == 0:
+        return {'average': 0, 'count': 0}
+    avg = round(sum(r.rating for r in ratings) / total, 1)
+    return {'average': avg, 'count': total}
 
 @login_required
 def create_resume(request):
@@ -207,3 +215,38 @@ def download_resume_docx(request, resume_id):
 
         except subprocess.CalledProcessError:
             return HttpResponse("Помилка при генерації DOCX через Pandoc.", status=500)
+
+
+@require_POST
+@login_required
+def rate_template(request):
+    template_name = request.POST.get('template')
+    rating = int(request.POST.get('rating', 0))
+
+    if template_name and 1 <= rating <= 5:
+        obj, created = TemplateRating.objects.update_or_create(
+            user=request.user,
+            template_name=template_name,
+            defaults={'rating': rating}
+        )
+        return JsonResponse({'success': True, 'rating': rating})
+
+    return JsonResponse({'success': False, 'error': 'Invalid input'})
+
+
+@login_required
+def get_template_rating(request):
+    template_name = request.GET.get('template')
+    if not template_name:
+        return JsonResponse({'error': 'No template provided'}, status=400)
+
+    ratings = TemplateRating.objects.filter(template_name=template_name)
+    count = ratings.count()
+    avg = round(sum(r.rating for r in ratings) / count, 1) if count > 0 else 0
+    user_rating = TemplateRating.objects.filter(template_name=template_name, user=request.user).first()
+
+    return JsonResponse({
+        'average': avg,
+        'count': count,
+        'user_rating': user_rating.rating if user_rating else 0
+    })
