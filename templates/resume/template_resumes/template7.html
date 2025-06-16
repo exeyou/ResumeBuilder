@@ -3,57 +3,95 @@
 {% block content %}
   <style>
     body {
-      background-color: #1e1e1e;
-      color: #eaeaea;
+      background-color: #eafaf1; /* Светло-зелёный фон */
+      color: #2f4f2f; /* Тёмно-зелёный текст */
     }
 
-    .dark-card {
-      background-color: #2c2c2c;
+    .light-card {
+      background-color: #ffffff;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 4px 12px rgba(0, 128, 0, 0.2);
       max-width: 800px;
       margin: auto;
+      border: 1px solid #b2dfb2;
     }
 
-    .dark-item {
+    .light-item {
       padding: 10px 15px;
-      border-bottom: 1px solid #444;
+      border-bottom: 1px solid #cceccc;
     }
 
-    .dark-item strong {
-      color: #9ecfff;
+    .light-item strong {
+      color: #2e8b57; /* насыщенно-зелёный акцент */
     }
 
     h2 {
       text-align: center;
-      color: #4ca3ff;
+      color: #228b22; /* Основной зелёный цвет заголовка */
       margin-bottom: 2rem;
+    }
+
+    .btn.btn-primary {
+      background-color: #4caf50;
+      border-color: #4caf50;
+      color: white;
+      margin-right: 10px;
+    }
+
+    .btn.btn-primary:hover {
+      background-color: #45a049;
+      border-color: #45a049;
     }
   </style>
 
   <h2>Резюме</h2>
-  <div class="dark-card">
+  <div class="light-card">
     {% if resume.first_name or resume.last_name %}
-      <div class="dark-item"><strong>ПІБ:</strong> {{ resume.first_name }} {{ resume.last_name }}</div>
+      <div class="light-item"><strong>ПІБ:</strong> {{ resume.first_name }} {{ resume.last_name }}</div>
     {% endif %}
     {% if resume.age %}
-      <div class="dark-item"><strong>Вік:</strong> {{ resume.age }}</div>
+      <div class="light-item"><strong>Вік:</strong> {{ resume.age }}</div>
     {% endif %}
     {% if resume.phone %}
-      <div class="dark-item"><strong>Телефон:</strong> {{ resume.phone }}</div>
+      <div class="light-item"><strong>Телефон:</strong> {{ resume.phone }}</div>
     {% endif %}
     {% if resume.email %}
-      <div class="dark-item"><strong>Email:</strong> {{ resume.email }}</div>
+      <div class="light-item"><strong>Email:</strong> {{ resume.email }}</div>
     {% endif %}
     {% if resume.education %}
-      <div class="dark-item"><strong>Освіта:</strong> {{ resume.education }}</div>
+      <div class="light-item"><strong>Освіта:</strong> {{ resume.education }}</div>
     {% endif %}
     {% if resume.experience %}
-      <div class="dark-item"><strong>Досвід:</strong> {{ resume.experience|plural_years }}</div>
+      <div class="light-item"><strong>Досвід:</strong> {{ resume.experience|plural_years }}</div>
     {% endif %}
     {% if resume.about %}
-      <div class="dark-item"><strong>Про себе:</strong> {{ resume.about }}</div>
+      <div class="light-item"><strong>Про себе:</strong> {{ resume.about }}</div>
     {% endif %}
   </div>
+
+  {% if not show_edit_panel %}
+    {% if not pdf %}
+      {% include 'resume/components/save_and_edit_button.html' %}
+    {% endif %}
+  {% endif %}
+
+  {% if not pdf %}
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
+        Завантажити PDF
+      </a>
+      <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
+        Завантажити DOCX
+      </a>
+    </div>
+  {% endif %}
+
+  {% if show_edit_panel %}
+    {% if not pdf %}
+      <div style="margin-top: 30px;">
+        {% include 'resume/components/edit_resume.html' %}
+      </div>
+    {% endif %}
+  {% endif %}
 {% endblock %}

@@ -165,5 +165,28 @@
         </div>
       </div>
     {% endif %}
+    {% if not show_edit_panel %}
+        {% if not pdf %}
+          {% include 'resume/components/save_and_edit_button.html' %}
+        {% endif %}
+      {% endif %}
+    </div>
+     {% if not pdf %}
+        <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
+          Завантажити PDF
+        </a>
+        <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
+          Завантажити DOCX
+        </a>
+      {% endif %}
+  </div>
+
+  {% if show_edit_panel %}
+    {% if not pdf %}
+      <div style="margin-top: 30px;">
+        {% include 'resume/components/edit_resume.html' %}
+      </div>
+    {% endif %}
+  {% endif %}
   </div>
 {% endblock %}
