@@ -43,7 +43,6 @@ nosetests.xml
 coverage.xml
 
 staticfiles/
-static/
 media/
 
 node_modules/
