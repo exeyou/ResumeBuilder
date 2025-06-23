@@ -6,6 +6,7 @@ from django.utils.encoding import smart_str
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse, FileResponse, JsonResponse, Http404
 from django.template.loader import render_to_string
+from django.core.files.base import ContentFile
 from django.conf import settings
 
 from datetime import timedelta
@@ -34,11 +35,10 @@ def get_template_rating_info(template_name):
 @login_required
 def create_resume(request):
     if request.method == 'POST':
-        form = ResumeForm(request.POST, user=request.user)
+        form = ResumeForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             resume_data = form.cleaned_data
 
-            # Создание черновика
             resume = Resume(
                 user=request.user,
                 first_name=resume_data['first_name'],
@@ -52,13 +52,16 @@ def create_resume(request):
                 education=resume_data['education'],
                 about=resume_data['about'],
                 template=resume_data['template'],
-                is_saved=False  # Черновик!
+                is_saved=False,
+                photo=request.FILES.get('photo'),
+                photo_caption=resume_data.get('photo_caption'),
+                attachment=request.FILES.get('attachment'),
+                attachment_caption=resume_data.get('attachment_caption'),
             )
+
             resume.save()
 
-            # Перенаправить в предпросмотр
             return redirect('resume:preview_resume', resume_id=resume.id)
-
     else:
         form = ResumeForm(user=request.user)
 
@@ -69,8 +72,7 @@ def create_resume(request):
 @login_required
 def edit_resume(request, resume_id):
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
-    # Рендерим основной шаблон резюме (например, resume/template_resumes/{template}.html),
-    # в который включаем боковое окно редактирования через include
+
     template_name = f'resume/template_resumes/{resume.template}.html'
     return render(request, template_name, {'resume': resume, 'show_edit_panel': True})
 
@@ -84,7 +86,6 @@ def save_resume(request):
         if resume_id:
             resume = get_object_or_404(Resume, id=resume_id, user=request.user)
 
-            # Если не переданы ключевые данные, просто отмечаем как is_saved
             if not request.POST.get('first_name') and not request.POST.get('last_name'):
                 resume.is_saved = True
                 resume.save()
@@ -104,8 +105,11 @@ def save_resume(request):
         resume.address = request.POST.get('address')
         resume.education = request.POST.get('education')
         resume.about = request.POST.get('about')
+        resume.photo_caption = request.POST.get('photo_caption')
+        resume.attachment_caption = request.POST.get('attachment_caption')
         resume.template = template
         resume.is_saved = True
+
 
         resume.save()
 
@@ -174,7 +178,6 @@ def download_resume_pdf(request, resume_id):
 def download_resume_docx(request, resume_id):
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
 
-    # Рендерим HTML из шаблона
     html_string = render_to_string(
         f'resume/template_resumes/{resume.template}.html',
         {
@@ -185,14 +188,13 @@ def download_resume_docx(request, resume_id):
         request=request
     )
 
-    # Создаем временные файлы
     with tempfile.NamedTemporaryFile(suffix=".html", delete=False) as html_file, \
          tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as docx_file:
 
         html_file.write(html_string.encode('utf-8'))
         html_file.flush()
 
-        # Вызываем Pandoc
+
         try:
             subprocess.run([
                 "pandoc",
@@ -200,7 +202,7 @@ def download_resume_docx(request, resume_id):
                 "-f", "html",
                 "-t", "docx",
                 "-o", docx_file.name,
-                "--embed-resources",  # чтобы включить встроенные стили
+                "--embed-resources",
                 "--standalone"
             ], check=True)
 
@@ -250,3 +252,67 @@ def get_template_rating(request):
         'count': count,
         'user_rating': user_rating.rating if user_rating else 0
     })
+
+
+@login_required
+def copy_resume(request, resume_id):
+    original_resume = get_object_or_404(Resume, id=resume_id, user=request.user)
+
+    # Create a new instance with copied fields
+    new_resume = Resume.objects.create(
+        user=request.user,
+        first_name=original_resume.first_name,
+        last_name=original_resume.last_name,
+        age=original_resume.age,
+        activity=original_resume.activity,
+        experience=original_resume.experience,
+        phone=original_resume.phone,
+        email=original_resume.email,
+        address=original_resume.address,
+        education=original_resume.education,
+        about=original_resume.about,
+        template=original_resume.template,
+        is_saved=original_resume.is_saved,
+        photo_caption=original_resume.photo_caption,
+        attachment_caption=original_resume.attachment_caption,
+    )
+
+    # Copy photo file if exists
+    if original_resume.photo:
+        photo_content = original_resume.photo.read()
+        new_resume.photo.save(
+            os.path.basename(original_resume.photo.name),
+            ContentFile(photo_content)
+        )
+
+    # Copy attachment file if exists
+    if original_resume.attachment:
+        attachment_content = original_resume.attachment.read()
+        new_resume.attachment.save(
+            os.path.basename(original_resume.attachment.name),
+            ContentFile(attachment_content)
+        )
+
+    new_resume.save()
+    return redirect('resume:my_resumes')
+
+
+@login_required
+def preview_resume_pdf(request, resume_id):
+    resume = get_object_or_404(Resume, id=resume_id, user=request.user)
+
+    html_string = render_to_string(
+        f'resume/template_resumes/{resume.template}.html',
+        {
+            'resume': resume,
+            'show_edit_panel': False,
+            'pdf': True  # включаем стили для PDF
+        },
+        request=request
+    )
+
+    html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+    pdf = html.write_pdf(stylesheets=[CSS(string='@page { size: A4; margin: 10mm }')])
+
+    return HttpResponse(pdf, content_type='application/pdf')
+

@@ -1,0 +1,38 @@
+{# Компонент управления резюме: предпросмотр, загрузка, сохранение, редактирование #}
+
+{% if not pdf %}
+  <div style="margin-top: 20px;">
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 15px;">
+      <a href="{% url 'resume:preview_resume_pdf' resume.id %}" target="_blank" class="btn btn-secondary">
+        Переглянути PDF
+      </a>
+      <div style="display: flex; align-items: center; gap: 4px;">
+        <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
+          Завантажити PDF
+        </a>
+        <span style="font-size: 0.9rem; color: #555;">(рекомендується)</span>
+      </div>
+      <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
+        Завантажити DOCX
+      </a>
+    </div>
+
+    {% if resume and not resume.is_saved %}
+      <form method="POST" action="{% url 'resume:save_resume' %}" style="margin-top: 10px;">
+        {% csrf_token %}
+        <input type="hidden" name="resume_id" value="{{ resume.id }}">
+        <input type="hidden" name="template" value="{{ resume.template }}">
+
+        <button type="submit" class="btn btn-primary">
+          💾 Зберегти i редагувати
+        </button>
+      </form>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% if show_edit_panel and not pdf %}
+  <div style="flex: 1; border-left: 1px solid #ccc; padding-left: 20px; margin-top: 30px;">
+    {% include 'resume/components/edit_resume.html' %}
+  </div>
+{% endif %}

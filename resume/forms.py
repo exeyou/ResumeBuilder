@@ -13,7 +13,12 @@ class ResumeForm(forms.ModelForm):
         ('template8', 'Шаблон 8'),
         ('template9', 'Шаблон 9')
     )
+
     template = forms.ChoiceField(choices=TEMPLATE_CHOICES, widget=forms.RadioSelect)
+    photo = forms.ImageField(required=False)
+    attachment = forms.FileField(required=False)
+    photo_caption = forms.CharField(required=False)
+    attachment_caption = forms.CharField(required=False)
 
     class Meta:
         model = Resume

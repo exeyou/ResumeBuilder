@@ -17,6 +17,9 @@
           <a href="{% url 'resume:delete_resume' resume.id %}" class="btn btn-danger" style="font-size: 1rem; padding: 5px 10px; border-radius: 5px; border: 1px solid #cc4444; color: #b03030; text-decoration: none;">
             Видалити
           </a>
+          <a href="{% url 'resume:copy_resume' resume.id %}" class="btn btn-info" style="font-size: 1rem; padding: 5px 10px; margin-left: 10px; border-radius: 5px; border: 1px solid #3399cc; color: #006699; text-decoration: none;">
+            Копіювати
+          </a>
         </li>
       {% endfor %}
     </ul>

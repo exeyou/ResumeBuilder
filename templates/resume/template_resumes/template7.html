@@ -3,8 +3,8 @@
 {% block content %}
   <style>
     body {
-      background-color: #eafaf1; /* Светло-зелёный фон */
-      color: #2f4f2f; /* Тёмно-зелёный текст */
+      background-color: #eafaf1;
+      color: #2f4f2f;
     }
 
     .light-card {
@@ -23,25 +23,28 @@
     }
 
     .light-item strong {
-      color: #2e8b57; /* насыщенно-зелёный акцент */
+      color: #2e8b57;
     }
 
     h2 {
       text-align: center;
-      color: #228b22; /* Основной зелёный цвет заголовка */
+      color: #228b22;
       margin-bottom: 2rem;
     }
 
-    .btn.btn-primary {
-      background-color: #4caf50;
-      border-color: #4caf50;
-      color: white;
-      margin-right: 10px;
+    .media-section {
+      margin-top: 25px;
+      text-align: center;
     }
 
-    .btn.btn-primary:hover {
-      background-color: #45a049;
-      border-color: #45a049;
+    .media-section img {
+      max-width: 220px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .media-caption {
+      margin-bottom: 5px;
     }
   </style>
 
@@ -68,30 +71,25 @@
     {% if resume.about %}
       <div class="light-item"><strong>Про себе:</strong> {{ resume.about }}</div>
     {% endif %}
-  </div>
 
-  {% if not show_edit_panel %}
-    {% if not pdf %}
-      {% include 'resume/components/save_and_edit_button.html' %}
-    {% endif %}
-  {% endif %}
-
-  {% if not pdf %}
-    <div style="text-align: center; margin-top: 20px;">
-      <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
-        Завантажити PDF
-      </a>
-      <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
-        Завантажити DOCX
-      </a>
-    </div>
-  {% endif %}
-
-  {% if show_edit_panel %}
-    {% if not pdf %}
-      <div style="margin-top: 30px;">
-        {% include 'resume/components/edit_resume.html' %}
+    {% if resume.photo %}
+      <div class="media-section">
+        {% if resume.photo_caption %}
+          <p class="media-caption">{{ resume.photo_caption }}</p>
+        {% endif %}
+        <img src="{{ resume.photo.url }}" alt="Фото">
       </div>
     {% endif %}
-  {% endif %}
+
+    {% if resume.attachment %}
+      <div class="media-section">
+        {% if resume.attachment_caption %}
+          <p class="media-caption">{{ resume.attachment_caption }}</p>
+        {% endif %}
+        <a href="{{ resume.attachment.url }}">{{ resume.attachment.name }}</a>
+      </div>
+    {% endif %}
+
+    {% include 'resume/components/resume_controls.html' %}
+  </div>
 {% endblock %}

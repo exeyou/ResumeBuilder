@@ -55,6 +55,22 @@
       gap: 12px;
     }
 
+    .attachment-photo-block {
+      margin-top: 30px;
+      background: #f5f9ff;
+      border: 1px solid #cde0f8;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .caption {
+      margin-bottom: 5px;
+    }
+
     h2.resume-title {
       font-size: 2.2rem;
       color: #004080;
@@ -95,28 +111,25 @@
         <div class="resume-item"><strong>Про себе:</strong> {{ resume.about }}</div>
       {% endif %}
 
-      {% if not show_edit_panel and not pdf %}
-        <div style="margin-top: 20px;">
-          {% include 'resume/components/save_and_edit_button.html' %}
+      {% if resume.photo or resume.attachment %}
+        <div class="attachment-photo-block">
+          {% if resume.photo %}
+            {% if resume.photo_caption %}
+              <p class="caption">{{ resume.photo_caption }}</p>
+            {% endif %}
+            <img src="{{ resume.photo.url }}" alt="Фото" style="max-width: 220px; border-radius: 10px;">
+          {% endif %}
+
+          {% if resume.attachment %}
+            {% if resume.attachment_caption %}
+              <p class="caption">{{ resume.attachment_caption }}</p>
+            {% endif %}
+            <a href="{{ resume.attachment.url }}">{{ resume.attachment.name }}</a>
+          {% endif %}
         </div>
       {% endif %}
 
-      {% if not pdf %}
-        <div class="download-buttons">
-          <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
-            Завантажити PDF (рекомендується)
-          </a>
-          <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
-            Завантажити DOCX (можуть бути нестикування)
-          </a>
-        </div>
-      {% endif %}
+      {% include 'resume/components/resume_controls.html' %}
     </div>
-
-    {% if show_edit_panel and not pdf %}
-      <div class="edit-panel">
-        {% include 'resume/components/edit_resume.html' %}
-      </div>
-    {% endif %}
   </div>
 {% endblock %}

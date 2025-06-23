@@ -77,6 +77,25 @@
       display: flex;
       justify-content: space-between;
     }
+
+    .media-block {
+      background: #e6f2ff;
+      padding: 20px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .media-block img {
+      max-width: 220px;
+      border-radius: 10px;
+    }
+
+    .media-caption {
+      margin-bottom: 5px;
+    }
   </style>
 
   <h2>Резюме</h2>
@@ -165,28 +184,29 @@
         </div>
       </div>
     {% endif %}
-    {% if not show_edit_panel %}
-        {% if not pdf %}
-          {% include 'resume/components/save_and_edit_button.html' %}
-        {% endif %}
-      {% endif %}
-    </div>
-     {% if not pdf %}
-        <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
-          Завантажити PDF
-        </a>
-        <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
-          Завантажити DOCX
-        </a>
-      {% endif %}
-  </div>
 
-  {% if show_edit_panel %}
-    {% if not pdf %}
-      <div style="margin-top: 30px;">
-        {% include 'resume/components/edit_resume.html' %}
+    {% if resume.photo %}
+      <div class="timeline-block">
+        <div class="timeline-content media-block">
+          {% if resume.photo_caption %}
+            <p class="media-caption">{{ resume.photo_caption }}</p>
+          {% endif %}
+          <img src="{{ resume.photo.url }}" alt="Фото">
+        </div>
       </div>
     {% endif %}
-  {% endif %}
+
+    {% if resume.attachment %}
+      <div class="timeline-block">
+        <div class="timeline-content media-block">
+          {% if resume.attachment_caption %}
+            <p class="media-caption">{{ resume.attachment_caption }}</p>
+          {% endif %}
+          <a href="{{ resume.attachment.url }}">{{ resume.attachment.name }}</a>
+        </div>
+      </div>
+    {% endif %}
+
+    {% include 'resume/components/resume_controls.html' %}
   </div>
 {% endblock %}

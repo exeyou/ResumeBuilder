@@ -1,8 +1,6 @@
 {% extends 'base/base.html' %}
-
 {% block content %}
   <div style="display: grid; grid-template-columns: 1fr; gap: 25px;">
-
     {% if resume.first_name or resume.last_name %}
     <section style="background: #e7f0ff; padding: 20px; border-radius: 8px;">
       <h3>👤 Особисті дані</h3>
@@ -24,13 +22,7 @@
     {% if resume.experience %}
     <section style="background: #fff8e1; padding: 20px; border-radius: 8px;">
       <h3>📜 Досвід</h3>
-      <p><strong>Досвід:</strong>
-        {% if resume.experience %}
-          {{ resume.experience }} {{ resume.experience|pluralize:"рік,роки,років" }} досвіду
-        {% else %}
-          Немає даних
-        {% endif %}
-      </p>
+      <p>{{ resume.experience }} {{ resume.experience|pluralize:"рік,роки,років" }} досвіду</p>
     </section>
     {% endif %}
 
@@ -47,28 +39,25 @@
       <p>{{ resume.about }}</p>
     </section>
     {% endif %}
-     {% if not pdf %}
-        <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
-          Завантажити PDF
-        </a>
-        <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
-          Завантажити DOCX
-        </a>
+
+    {% if resume.photo %}
+    <section style="background: #f0f4ff; padding: 20px; border-radius: 8px;">
+      {% if resume.photo_caption %}
+        <p style="margin-bottom: 5px;">{{ resume.photo_caption }}</p>
       {% endif %}
-    {% if not show_edit_panel %}
-      {% if not pdf %}
-        <div>
-          {% include 'resume/components/save_and_edit_button.html' %}
-        </div>
-      {% endif %}
+      <img src="{{ resume.photo.url }}" alt="Фото" style="max-width: 220px; border-radius: 10px;">
+    </section>
     {% endif %}
 
-    {% if show_edit_panel %}
-      {% if not pdf %}
-        <div>
-          {% include 'resume/components/edit_resume.html' %}
-        </div>
+    {% if resume.attachment %}
+    <section style="background: #fff0f0; padding: 20px; border-radius: 8px;">
+      {% if resume.attachment_caption %}
+        <p style="margin-bottom: 5px;">{{ resume.attachment_caption }}</p>
       {% endif %}
+      <a href="{{ resume.attachment.url }}">{{ resume.attachment.name }}</a>
+    </section>
     {% endif %}
+
+    {% include 'resume/components/resume_controls.html' %}
   </div>
 {% endblock %}

@@ -1,53 +1,112 @@
 {% extends 'base/base.html' %}
-
+{% load static %}
 {% block content %}
-  <h2 style="font-size: 2.8rem; margin-bottom: 1.2rem;">Ласкаво просимо до Резюме-Білдера</h2>
 
-  <p style="font-size: 1.3rem; line-height: 1.8; max-width: 800px; margin-bottom: 2rem;">
-    QuickPrint це простий, зручний та ефективний інструмент для створення професійного резюме онлайн. Ви можете легко:
-  </p>
+<style>
+  .floating-templates-container {
+    position: absolute;
+    top: 20%;
+    right: 0;
+    width: 100%;
+    height: 1000px;
+    pointer-events: none;
+    z-index: -1;
+  }
 
-  <ul style="font-size: 1.25rem; line-height: 1.7; max-width: 800px; margin-bottom: 2.5rem; padding-left: 1.3rem;">
-    <li><strong>Створити резюме</strong> за готовими шаблонами сайту або iнших користувачiв</li>
-    <li><strong>Редагувати</strong> особисту інформацію, досвід, навички, освіту тощо</li>
-    <li><strong>Переглядати</strong> свої резюме у зручному форматі</li>
-    <li><strong>Експортувати</strong> резюме у форматах PDF або DOCX</li>
-    <li><strong>Керувати</strong> декількома резюме одночасно</li>
-    <li><strong>Знаходити оголошення</strong> про оновлення та пропозиції</li>
-  </ul>
+  .template-image {
+    position: absolute;
+    width: 450px;
+    height: auto;
+    opacity: 0.85;
+    animation: floatAnim 12s ease-in-out infinite;
+    transform: translateY(0) rotate(0deg);
+    --angle: 1.5deg;
+    --shift: 6px;
 
-  <div style="margin-bottom: 2rem;">
-    {% if user.is_authenticated %}
-      <a href="{% url 'resume:create_resume' %}" class="btn-important">Створити нове резюме</a>
-    {% else %}
-      <a href="{% url 'accounts:signup' %}" class="btn-important">Зареєструватися зараз</a>
-    {% endif %}
-  </div>
 
-  <p style="font-size: 1.25rem; line-height: 1.8; max-width: 800px; margin-bottom: 3rem;">
-      Платформа підходить як для новачків, так і для досвідчених фахівців. Ви можете повністю зосередитися на змісті - ми подбаємо про оформлення.
-  </p>
+    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
 
+    border-radius: 1px;
+  }
+
+
+  .template-1 { top: 10%; left: 60%; animation-delay: 0.1s; --angle: 1.2deg; --shift: 5px; }
+  .template-2 { top: 30%; left: 62%; animation-delay: 0.2s; --angle: 1.0deg; --shift: 6px; }
+  .template-3 { top: 55%; left: 68%; animation-delay: 0.15s; --angle: 1.5deg; --shift: 7px; }
+  .template-4 { top: 40%; left: 59%; animation-delay: 0.05s; --angle: 1.3deg; --shift: 6px; }
+  .template-5 { top: 65%; left: 64%; animation-delay: 0.25s; --angle: 1.1deg; --shift: 5px; }
+  .template-6 { top: 20%; left: 67%; animation-delay: 0.3s; --angle: 1.4deg; --shift: 8px; }
+
+  @keyframes floatAnim {
+    0%   { transform: translateY(0) rotate(calc(-1 * var(--angle))); }
+    25%  { transform: translateY(calc(-1 * var(--shift))) rotate(0deg); }
+    50%  { transform: translateY(0) rotate(calc(var(--angle))); }
+    75%  { transform: translateY(var(--shift)) rotate(0deg); }
+    100% { transform: translateY(0) rotate(calc(-1 * var(--angle))); }
+  }
+</style>
+
+<div class="floating-templates-container">
+  {% for i in "123456" %}
+    <img src="{% static 'resume_templates/template'|add:i|stringformat:'s'|add:'.jpg' %}"
+         alt="Template {{ i }}"
+         class="template-image template-{{ forloop.counter }}">
+  {% endfor %}
+</div>
+
+
+<h2 style="font-size: 2.8rem; margin-bottom: 1.2rem;">Ласкаво просимо до Резюме-Білдера</h2>
+
+<p style="font-size: 1.3rem; line-height: 1.8; max-width: 800px; margin-bottom: 2rem;">
+  QuickPrint це простий, зручний та ефективний інструмент для створення професійного резюме онлайн. Ви можете легко:
+</p>
+
+<ul style="font-size: 1.25rem; line-height: 1.7; max-width: 800px; margin-bottom: 2.5rem; padding-left: 1.3rem;">
+  <li><strong>Створити резюме</strong> за готовими шаблонами сайту або iнших користувачiв</li>
+  <li><strong>Редагувати</strong> особисту інформацію, досвід, навички, освіту тощо</li>
+  <li><strong>Переглядати</strong> свої резюме у зручному форматі</li>
+  <li><strong>Експортувати</strong> резюме у форматах PDF або DOCX</li>
+  <li><strong>Керувати</strong> декількома резюме одночасно</li>
+  <li><strong>Знаходити оголошення</strong> про оновлення та пропозиції</li>
+</ul>
+
+<div style="margin-bottom: 2rem;">
   {% if user.is_authenticated %}
-    <hr style="margin: 50px 0; border-color: #cce0ff;">
-
-    <div>
-      <h3 style="color: #004080; font-size: 2rem; margin-bottom: 1rem;">Що ви можете зробити прямо зараз?</h3>
-      <ul style="font-size: 1.2rem; line-height: 1.7; max-width: 800px; padding-left: 1.3rem;">
-        <li style="margin-bottom: 12px;">
-          <a href="{% url 'accounts:view_profile' %}" class="btn-link" style="font-size: 1.15rem;">Переглянути профіль</a>
-        </li>
-        <li style="margin-bottom: 12px;">
-          <a href="{% url 'announcement:announcement_list' %}" class="btn-link" style="font-size: 1.15rem;">Переглянути оголошення</a>
-        </li>
-        <li>
-          <a href="{% url 'resume:my_resumes' %}" class="btn-link" style="font-size: 1.15rem;">Керувати моїми резюме</a>
-        </li>
-      </ul>
-    </div>
+    <a href="{% url 'resume:create_resume' %}" class="btn-important">Створити нове резюме</a>
   {% else %}
-    <p style="font-size: 1.15rem; color: #004080; max-width: 800px;">
-      Щоб створити своє перше резюме, будь ласка, <a href="{% url 'accounts:signup' %}" style="color: #004080; font-weight: 600;">зареєструйтесь</a> або <a href="{% url 'accounts:login' %}" style="color: #004080; font-weight: 600;">увійдіть у свій акаунт</a>.
-    </p>
+    <a href="{% url 'accounts:signup' %}" class="btn-important">Зареєструватися зараз</a>
   {% endif %}
+</div>
+
+<p style="font-size: 1.25rem; line-height: 1.8; max-width: 800px; margin-bottom: 3rem;">
+    Платформа підходить як для новачків, так і для досвідчених фахівців. Ви можете повністю зосередитися на змісті - ми подбаємо про оформлення.
+</p>
+
+{% if user.is_authenticated %}
+  <hr style="margin: 50px 0; border-color: #cce0ff;">
+  <div>
+    <h3 style="color: #004080; font-size: 2rem; margin-bottom: 1rem;">Що ви можете зробити прямо зараз?</h3>
+    <ul style="font-size: 1.2rem; line-height: 1.7; max-width: 800px; padding-left: 1.3rem;">
+      <li style="margin-bottom: 12px;">
+        <a href="{% url 'accounts:view_profile' %}" class="btn-link" style="font-size: 1.15rem;">Переглянути профіль</a>
+      </li>
+      <li style="margin-bottom: 12px;">
+        <a href="{% url 'announcement:announcement_list' %}" class="btn-link" style="font-size: 1.15rem;">Переглянути оголошення</a>
+      </li>
+      <li>
+        <a href="{% url 'resume:my_resumes' %}" class="btn-link" style="font-size: 1.15rem;">Керувати моїми резюме</a>
+      </li>
+    </ul>
+  </div>
+{% else %}
+  <p style="font-size: 1.15rem; color: #004080; max-width: 800px;">
+    Щоб створити своє перше резюме, будь ласка, <a href="{% url 'accounts:signup' %}" style="color: #004080; font-weight: 600;">зареєструйтесь</a> або <a href="{% url 'accounts:login' %}" style="color: #004080; font-weight: 600;">увійдіть у свій акаунт</a>.
+  </p>
+{% endif %}
+
 {% endblock %}

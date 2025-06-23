@@ -1,4 +1,4 @@
-<form method="post" id="resumeForm" action="{% url 'resume:save_resume' %}">
+<form method="post" id="resumeForm" action="{% url 'resume:save_resume' %}" enctype="multipart/form-data">
   {% csrf_token %}
   <input type="hidden" name="template" value="{{ resume.template }}">
   {% if resume.id %}
@@ -35,11 +35,22 @@
   <label>Досвід:</label>
   <input type="number" name="experience" id="input_experience" value="{{ resume.experience }}"><br>
 
+  <label>Фото:</label>
+  {% if resume.photo %}
+    <img src="{{ resume.photo.url }}" style="max-width: 150px; border-radius: 6px;"><br>
+  {% endif %}
+  <input type="file" name="photo"><br>
+
+  <label>Файл (портфоліо тощо):</label>
+  {% if resume.attachment %}
+    <a href="{{ resume.attachment.url }}" target="_blank">Переглянути поточний файл</a><br>
+  {% endif %}
+  <input type="file" name="attachment"><br><br>
+
   <button type="submit" id="saveButton">💾 Зберегти</button>
 </form>
 
 <script>
-  // Обновление превью в реальном времени
   const fields = [
     'first_name', 'last_name', 'age', 'phone', 'email', 'address',
     'education', 'about', 'activity', 'experience'

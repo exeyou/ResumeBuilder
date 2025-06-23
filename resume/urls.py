@@ -15,5 +15,7 @@ urlpatterns = [
     path('downloaddocx/<int:resume_id>/', views.download_resume_docx, name='download_resume_docx'),
     path('rate-template/', views.rate_template, name='rate_template'),
     path('api/get-template-rating/', views.get_template_rating, name='get_template_rating'),
+    path('copy/<int:resume_id>/', views.copy_resume, name='copy_resume'),
+    path('<int:resume_id>/preview/pdf/', views.preview_resume_pdf, name='preview_resume_pdf'),
 
 ]

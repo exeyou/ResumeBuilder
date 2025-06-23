@@ -18,6 +18,10 @@ class Resume(models.Model):
     template = models.CharField(max_length=100, default='default')
     is_saved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    photo_caption = models.CharField(max_length=255, blank=True, null=True)
+    photo = models.ImageField(upload_to='photos/', blank=True, null=True)
+    attachment_caption = models.CharField(max_length=255, blank=True, null=True)
+    attachment = models.FileField(upload_to='attachments/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username} — {self.first_name or ''} {self.last_name or ''}"
@@ -29,7 +33,8 @@ class TemplateRating(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'template_name')  # Один пользователь – одна оценка на шаблон
+        unique_together = ('user', 'template_name')
 
     def __str__(self):
         return f'{self.user.username} rated {self.template_name} → {self.rating}'
+

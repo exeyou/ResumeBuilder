@@ -57,38 +57,58 @@
     .info-block p {
       margin: 4px 0;
     }
+
+    .media-block {
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .media-block img {
+      max-width: 200px;
+      border-radius: 10px;
+    }
+
+    .media-caption {
+      margin-bottom: 5px;
+    }
   </style>
 
   <h2>Резюме</h2>
 
   <div class="resume-graph">
-
     <div class="info-block">
       {% if resume.first_name or resume.last_name %}
         <p><strong>ПІБ:</strong> {{ resume.first_name }} {{ resume.last_name }}</p>
       {% endif %}
-      {% if resume.age %}
-        <p><strong>Вік:</strong> {{ resume.age }}</p>
-      {% endif %}
-      {% if resume.phone %}
-        <p><strong>Телефон:</strong> {{ resume.phone }}</p>
-      {% endif %}
-      {% if resume.email %}
-        <p><strong>Email:</strong> {{ resume.email }}</p>
-      {% endif %}
-      {% if resume.address %}
-        <p><strong>Адреса:</strong> {{ resume.address }}</p>
-      {% endif %}
-      {% if resume.about %}
-        <p><strong>Про себе:</strong> {{ resume.about }}</p>
-      {% endif %}
-      {% if resume.activity %}
-        <p><strong>Діяльність:</strong> {{ resume.activity }}</p>
-      {% endif %}
-      {% if resume.education %}
-        <p><strong>Освіта:</strong> {{ resume.education }}</p>
-      {% endif %}
+      {% if resume.age %}<p><strong>Вік:</strong> {{ resume.age }}</p>{% endif %}
+      {% if resume.phone %}<p><strong>Телефон:</strong> {{ resume.phone }}</p>{% endif %}
+      {% if resume.email %}<p><strong>Email:</strong> {{ resume.email }}</p>{% endif %}
+      {% if resume.address %}<p><strong>Адреса:</strong> {{ resume.address }}</p>{% endif %}
+      {% if resume.about %}<p><strong>Про себе:</strong> {{ resume.about }}</p>{% endif %}
+      {% if resume.activity %}<p><strong>Діяльність:</strong> {{ resume.activity }}</p>{% endif %}
+      {% if resume.education %}<p><strong>Освіта:</strong> {{ resume.education }}</p>{% endif %}
     </div>
+
+    {% if resume.photo %}
+      <div class="media-block">
+        {% if resume.photo_caption %}
+          <p class="media-caption">{{ resume.photo_caption }}</p>
+        {% endif %}
+        <img src="{{ resume.photo.url }}" alt="Фото">
+      </div>
+    {% endif %}
+
+    {% if resume.attachment %}
+      <div class="media-block">
+        {% if resume.attachment_caption %}
+          <p class="media-caption">{{ resume.attachment_caption }}</p>
+        {% endif %}
+        <a href="{{ resume.attachment.url }}">{{ resume.attachment.name }}</a>
+      </div>
+    {% endif %}
 
     {% if resume.experience %}
       <div class="bar-label">
@@ -100,29 +120,7 @@
         <div class="progress-value">{{ resume.experience|default:"70" }}%</div>
       </div>
     {% endif %}
-{% if not show_edit_panel %}
-        {% if not pdf %}
-          {% include 'resume/components/save_and_edit_button.html' %}
-        {% endif %}
-      {% endif %}
-    </div>
-     {% if not pdf %}
-        <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
-          Завантажити PDF
-        </a>
-        <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
-          Завантажити DOCX
-        </a>
-      {% endif %}
-  </div>
 
-  {% if show_edit_panel %}
-    {% if not pdf %}
-      <div style="margin-top: 30px;">
-        {% include 'resume/components/edit_resume.html' %}
-      </div>
-    {% endif %}
-  {% endif %}
-
+    {% include 'resume/components/resume_controls.html' %}
   </div>
 {% endblock %}

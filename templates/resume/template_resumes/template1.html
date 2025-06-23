@@ -19,32 +19,25 @@
       {% endif %}
       {% if resume.about %}<p><strong>Про себе:</strong> {{ resume.about }}</p>{% endif %}
 
-      {% if not show_edit_panel %}
-        {% if not pdf %}
-          {% include 'resume/components/save_and_edit_button.html' %}
-        {% endif %}
+      {% if resume.photo %}
+        <div style="margin-top: 20px;">
+          {% if resume.photo_caption %}
+            <p style="margin-bottom: 5px;">{{ resume.photo_caption }}</p>
+          {% endif %}
+          <img src="{{ resume.photo.url }}" alt="Фото" style="max-width: 200px; border-radius: 8px;">
+        </div>
       {% endif %}
 
-
-      {% if not pdf %}
-        <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
-          Завантажити PDF
-        </a>
-        (рекомендується)
-        <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
-          Завантажити DOCX
-        </a>
-        (можуть бути нестикування)
+      {% if resume.attachment %}
+        <div style="margin-top: 20px;">
+          {% if resume.attachment_caption %}
+            <p style="margin-bottom: 5px;">{{ resume.attachment_caption }}</p>
+          {% endif %}
+          <a href="{{ resume.attachment.url }}">{{ resume.attachment.name }}</a>
+        </div>
       {% endif %}
+
+      {% include 'resume/components/resume_controls.html' %}
     </div>
-
-    {% if show_edit_panel %}
-     {% if not pdf %}
-      <div style="flex: 1; border-left: 1px solid #ccc; padding-left: 20px;">
-        {% include 'resume/components/edit_resume.html' %}
-      </div>
-     {% endif %}
-    {% endif %}
-
   </div>
 {% endblock %}

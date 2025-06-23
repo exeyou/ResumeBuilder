@@ -46,6 +46,18 @@
       color: #4c3c4c;
       line-height: 1.5;
     }
+
+    .photo-img {
+      width: 100%;
+      max-width: 180px;
+      border-radius: 10px;
+      display: block;
+      margin: 0 auto 10px;
+    }
+
+    .centered-text {
+      text-align: center;
+    }
   </style>
 
   <div class="pastel-wrapper">
@@ -80,29 +92,21 @@
         <h3>Про себе</h3>
         <p>{{ resume.about }}</p>
       </div>
-    </div>
-    {% if not show_edit_panel %}
-        {% if not pdf %}
-          {% include 'resume/components/save_and_edit_button.html' %}
-        {% endif %}
-      {% endif %}
-    </div>
-     {% if not pdf %}
-        <a href="{% url 'resume:download_resume_pdf' resume.id %}" class="btn btn-primary">
-          Завантажити PDF
-        </a>
-        <a href="{% url 'resume:download_resume_docx' resume.id %}" class="btn btn-primary">
-          Завантажити DOCX
-        </a>
-      {% endif %}
-  </div>
 
-  {% if show_edit_panel %}
-    {% if not pdf %}
-      <div style="margin-top: 30px;">
-        {% include 'resume/components/edit_resume.html' %}
-      </div>
-    {% endif %}
-  {% endif %}
+      {% if resume.photo %}
+        <div class="pastel-card centered-text">
+          <h3>{{ resume.photo_caption }}</h3>
+          <img src="{{ resume.photo.url }}" alt="Фото" class="photo-img">
+        </div>
+      {% endif %}
+      {% if resume.attachment %}
+        <div class="pastel-card centered-text">
+          <h3>{{ resume.attachment_caption }}</h3>
+          <a href="{{ resume.attachment.url }}">{{ resume.attachment.name }}</a>
+        </div>
+      {% endif %}
+    </div>
+
+    {% include 'resume/components/resume_controls.html' %}
   </div>
 {% endblock %}
